@@ -5,3 +5,12 @@ TELEGRAM_BOT_TOKEN=
 
 # telegram chat ID to send messages to (make sure your bot has access to the chat)
 TELEGRAM_CHAT_ID=
+
+
+# Plex Information
+
+# Plex Server URL
+PLEX_SERVER_URL=
+
+# Plex auth token
+PLEX_AUTH_TOKEN=
