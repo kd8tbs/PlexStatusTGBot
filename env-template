@@ -1,0 +1,7 @@
+# copy this file to .env and add tokens as listed
+
+# telegram-bot API token goes here
+TELEGRAM_BOT_TOKEN=
+
+# telegram chat ID to send messages to (make sure your bot has access to the chat)
+TELEGRAM_CHAT_ID=
