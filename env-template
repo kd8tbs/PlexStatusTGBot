@@ -1,2 +1,4 @@
+# rename this file to .env and add tokens as listed
+
 # telegram-bot API token goes here
 TELEGRAM_BOT_TOKEN=
