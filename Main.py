@@ -9,8 +9,6 @@ import secrets
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
-# import dependencies for Plex API
-# import dependencies for Telegram API
 
 #Global variable to store the instance of the Plex server
 plex_server_instance = None
