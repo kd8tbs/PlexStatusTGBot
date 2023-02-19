@@ -66,8 +66,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def get_random_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # TODO: Make this work. Movies is not iterable
-    movies = get_plex_server().library.section('Movies')
+    movies = get_plex_server().library.section('Movies').all()
     await context.bot.send_message(chat_id=update.effective_chat.id, text=random.choice(movies).title)
 
 async def main():
@@ -94,4 +93,4 @@ if __name__ == '__main__':
     # TODO: Figure out how to make these run simultaneously
     # TODO: Probably decouple these into their own files?
     application.run_polling()
-    asyncio.run(main())
+    # asyncio.run(main())
