@@ -15,7 +15,7 @@ plex_server_instance = None
 telegram_bot_instance = None
 
 
-def getPlexServer():
+def get_plex_server():
     global plex_server_instance
     if plex_server_instance is None:
         plex_server_instance = PlexServer(
@@ -23,42 +23,47 @@ def getPlexServer():
     return plex_server_instance
 
 
-def getTelegramBot():
+def get_telegram_bot():
     global telegram_bot_instance
     if telegram_bot_instance is None:
         telegram_bot_instance = telegram.Bot(os.getenv('TELEGRAM_BOT_TOKEN'))
     return telegram_bot_instance
 
 
-def isPlexOnline():
+def is_plex_online():
     try:
-        getPlexServer().clients()
+        get_plex_server().clients() # TODO: Find a better way to check if Plex is online. This could probably just be a simple ping.
         return True
     except:
         return False
 
 
-async def main():
-    bot = getTelegramBot()
-    plex = getPlexServer()
-    await bot.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Test message from PlexBot')
-
-    # TODO: move this to a separate function and parallelize it    
-    is_plex_online = True  # Start with Plex server assumed to be online
+async def check_plex_status():
+    plex_status = True  # Start with Plex server assumed to be online
 
     while True:
         print('Checking if Plex is online...')
-        if isPlexOnline():
-            if not is_plex_online:
-                await bot.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now online!')
+        if is_plex_online():
+            if not plex_status:
+                await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now online!')
                 print('Plex is online! Message sent to Telegram')
-            is_plex_online = True
+            plex_status = True
         else:
-            if is_plex_online:
-                await bot.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now offline!')
+            if plex_status:
+                await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now offline!')
                 print('Plex is offline! Message sent to Telegram')
-            is_plex_online = False
+            plex_status = False
         sleep(10)
+
+
+async def main():
+    await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Bot is now online')
+
+    # run checkPlexStatus() in the background
+    checkPlexStatusTask = asyncio.create_task(check_plex_status())
+
+    while True:
+        await asyncio.sleep(1)
 
 
 if __name__ == '__main__':
