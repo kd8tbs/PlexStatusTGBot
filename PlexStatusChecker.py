@@ -25,7 +25,7 @@ class PlexStatusThread():
             # TODO: Find a better way to check if Plex is online. This could probably just be a simple ping.
             get_plex_server().clients()
             return True
-        except:
+        except ConnectionError:
             return False
 
     async def check_plex_status(self):
