@@ -7,11 +7,12 @@ from utils import get_plex_server, get_telegram_bot
 
 class PlexStatusThread():
 
-    def __init__(self):
+    def __init__(self, bot_instance):
+        self.bot_instance = bot_instance
         self.stopped = False
 
     async def main(self):
-        await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Status Checker is now online')
+        await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Status Checker is now online')
         print('Plex Status Checker is now online')
 
         # run check_plex_status() in the background

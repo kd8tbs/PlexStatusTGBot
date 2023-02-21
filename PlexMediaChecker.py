@@ -7,13 +7,14 @@ from utils import get_plex_server, get_telegram_bot
 
 class PlexMediaThread():
 
-    def __init__(self):
+    def __init__(self, bot_instance):
+        self.bot_instance = bot_instance
         self.stopped = False
 
     async def main(self):
         # blows up and sleep does not fix it
         # maybe telegram api does not like being called from multiple threads? Look into multiple bot instances maybe?
-        await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Media Checker is now online')
+        await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Media Checker is now online')
         print('Plex Media Checker is now online')
 
         # run check_new_media() in the background

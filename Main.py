@@ -8,10 +8,10 @@ from utils import get_telegram_bot
 if __name__ == '__main__':
     load_dotenv()
 
-    status_thread: PlexStatusThread = PlexStatusThread()
+    status_thread: PlexStatusThread = PlexStatusThread(get_telegram_bot())
     status_thread.start_thread()
     
-    media_thread: PlexMediaThread = PlexMediaThread()
+    media_thread: PlexMediaThread = PlexMediaThread(get_telegram_bot())
     media_thread.start_thread()
     
     application: TelegramFunctions = TelegramFunctions(get_telegram_bot())
