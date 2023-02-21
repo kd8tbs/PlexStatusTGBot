@@ -7,14 +7,14 @@ from utils import get_plex_server, get_telegram_bot
 
 class PlexStatusThread():
 
-    def __init__(self, bot_instance: telegram.Bot):
-        self.bot_instance = bot_instance
+    def __init__(self):
         self.stopped = False
 
     async def main(self):
-        await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Bot is now online')
+        await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Status Checker is now online')
+        print('Plex Status Checker is now online')
 
-        # run checkPlexStatus() in the background
+        # run check_plex_status() in the background
         asyncio.create_task(self.check_plex_status())
 
         while not self.stopped:
@@ -26,6 +26,9 @@ class PlexStatusThread():
             get_plex_server().clients()
             return True
         except ConnectionError:
+            return False
+        except Exception as e:
+            print('Error checking if Plex is online: ' + str(e))
             return False
 
     async def check_plex_status(self):
