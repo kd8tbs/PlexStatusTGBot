@@ -29,6 +29,7 @@ class PlexStatusThread():
             return False
 
     async def check_plex_status(self):
+        # TODO: Figure out how to not assume Plex is online at the start
         plex_status = True  # Start with Plex server assumed to be online
 
         while True:
