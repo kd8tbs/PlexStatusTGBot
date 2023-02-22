@@ -40,12 +40,12 @@ class PlexStatusThread():
             print('Checking if Plex is online...')
             if self.is_plex_online():
                 if not plex_status:
-                    await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now online!')
+                    await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now online!')
                     print('Plex is online! Message sent to Telegram')
                 plex_status = True
             else:
                 if plex_status:
-                    await get_telegram_bot().sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now offline!')
+                    await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex is now offline!')
                     print('Plex is offline! Message sent to Telegram')
                 plex_status = False
             sleep(10)

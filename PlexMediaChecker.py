@@ -1,3 +1,4 @@
+import time
 import telegram
 import os
 import asyncio
@@ -12,8 +13,6 @@ class PlexMediaThread():
         self.stopped = False
 
     async def main(self):
-        # blows up and sleep does not fix it
-        # maybe telegram api does not like being called from multiple threads? Look into multiple bot instances maybe?
         await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text='Plex Media Checker is now online')
         print('Plex Media Checker is now online')
 
@@ -24,8 +23,40 @@ class PlexMediaThread():
             await asyncio.sleep(1)
     
     async def check_new_media(self):
-        # TODO: implement
-        return
+        # TODO: Make this not sned the most recent item on startup
+        plex = get_plex_server()
+
+        # Get the library section for TV Shows and Movies
+        tv_shows = plex.library.section('TV Shows')
+        movies = plex.library.section('Movies')
+
+        # Keep track of the most recent item added for each library section
+        most_recent_tv = None
+        most_recent_movie = None
+
+        while True:
+            # Get the most recent item in the TV Shows library section
+            tv_item = tv_shows.recentlyAdded()[0]
+
+            # If the most recent item is different than the previous most recent item,
+            # print a message indicating that new media has been added
+            if tv_item != most_recent_tv:
+                print(f"New TV show added: {tv_item.title}")
+                await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text=f"New TV show added: {tv_item.title} ({tv_item.year})")
+                most_recent_tv = tv_item
+
+            # Get the most recent item in the Movies library section
+            movie_item = movies.recentlyAdded()[0]
+
+            # If the most recent item is different than the previous most recent item,
+            # print a message indicating that new media has been added
+            if movie_item != most_recent_movie:
+                print(f"New movie added: {movie_item.title}")
+                await self.bot_instance.sendMessage(chat_id=os.getenv('TELEGRAM_CHAT_ID'), text=f"New movie added: {movie_item.title} ({movie_item.year})")
+                most_recent_movie = movie_item
+
+            # Wait for 10 seconds before checking for new media again
+            time.sleep(10)
     
     def run_thread(self):
         asyncio.run(self.main())
